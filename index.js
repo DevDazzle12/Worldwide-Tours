@@ -157,9 +157,9 @@ app.post('/api/v1/contact', async (req, res) => {
 
 
 app.post('/api/v1/trip', async (req, res) => {
-  const { checkinDate, emailValue, checkoutDate , people, numberValue ,nameValue  , name } = req.body;
-  if (!checkinDate || !emailValue || !checkoutDate || !people || !numberValue || !nameValue || !name) {
-    return res.status(400).json({ error: 'Please provide all required fields.' });
+  const {  emailValue, people, numberValue ,nameValue  , name } = req.body;
+  if (!emailValue || !people || !numberValue || !nameValue || !name) {
+    return res.status(400).json({ error: 'Please Provide all required fields.' });
   }
   const mailOptions = {
     from: 'ahmed.radiantcortex@gmail.com',
@@ -199,8 +199,6 @@ app.post('/api/v1/trip', async (req, res) => {
               <h2>Contact Information:</h2>
               <p><strong>Name:</strong> ${nameValue}</p>
               <p><strong>Number:</strong> ${numberValue}</p>
-              <p><strong>Check In Date:</strong> ${checkinDate}</p>
-              <p><strong>Check out Date:</strong> ${checkoutDate}</p>
               <p><strong>Email:</strong> ${emailValue}</p>
               <p><strong>People:</strong> ${people}</p>
               <p><strong>Visiting Country :</strong> ${name}</p>
@@ -222,7 +220,72 @@ app.post('/api/v1/trip', async (req, res) => {
   });
 });
 
+app.post('/api/v1/trip2', async (req, res) => {
+  const {  nameValue, emailValue, numberValue ,locationValue  , activitiesValue, accomodationValue,name,people} = req.body;
+  if (!nameValue || !emailValue || !numberValue || !locationValue || !activitiesValue || !accomodationValue  ||!name || !people) {
+    return res.status(400).json({ error: 'Please Provide all required fields.' });
+  }
+  const mailOptions = {
+    from: 'ahmed.radiantcortex@gmail.com',
+    to: 'contact@worldwidetours.co',
+    subject: 'Your Exclusive Invitation Inside',
+    html: `
+        <html>
+          <head>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                color: #333;
+              }
+    
+              .container {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              }
+    
+              h1 {
+                color: #007BFF;
+              }
+    
+              p {
+                line-height: 1.6;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>Contact Client</h1>
+              <h2>Contact Information:</h2>
+              <p><strong>Name:</strong> ${nameValue}</p>
+              <p><strong>Number:</strong> ${numberValue}</p>
+              <p><strong>Email:</strong> ${emailValue}</p>
+              <p><strong>location:</strong> ${locationValue}</p>
+              <p><strong>Activities:</strong> ${activitiesValue}</p>
+              <p><strong>aAccomodation:</strong> ${accomodationValue}</p>
+              <p><strong>People:</strong> ${people}</p>
+              <p><strong>Visiting Country :</strong> ${name}</p>
+            </div>
+          </body>
+        </html>
+      `,
+  };
 
+  // Send email
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error:', error);
+      return res.status(500).send(error.toString());
+    }
+
+    console.log('Email sent:', info.response);
+    res.status(200).json({ message: 'Message successfully saved.' });
+  });
+});
 
 // Start the server
 app.listen(port, () => {
